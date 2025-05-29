@@ -1,8 +1,8 @@
 streamlit
 pandas
-numpy
 geopandas
+pydeck
+geopy
+matplotlib
 plotly
-joblib
-scikit-learn
 streamlit-lottie

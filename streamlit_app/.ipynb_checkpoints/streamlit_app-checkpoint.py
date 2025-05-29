@@ -87,12 +87,12 @@ sayfa = st.session_state["sayfa"]
 
 @st.cache_data
 def load_meteor_data():
-    return pd.read_csv("../data/meteorite-landings.csv")
+    return pd.read_csv("data/meteorite-landings.csv")
 
 
 @st.cache_data
 def load_city_data():
-    return gpd.read_file("../data/ne_10m_populated_places/ne_10m_populated_places.shp")
+    return gpd.read_file("data/ne_10m_populated_places/ne_10m_populated_places.shp")
 
 
 
@@ -105,7 +105,7 @@ if sayfa == "Proje Bilgisi":
     import streamlit as st
     
     # 🔧 Uygun dosya yolu
-    json_path = "../assets/Animation - 1747267971133.json"
+    json_path = "assets/Animation - 1747267971133.json"
     
     # 🎬 JSON dosyasını yükleyen fonksiyon
     def load_lottie_file(path):

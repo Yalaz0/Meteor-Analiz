@@ -474,8 +474,8 @@ elif sayfa == "Modelleme ve Tahmin":
                 "Decision Tree", "Random Forest", "XGBoost",
                 "LightGBM", "CatBoost", "ExtraTrees"
             ],
-            "Accuracy": [0.72, 0.74, 0.76, 0.80, 0.84, 0.85, 0.83, 0.84, 0.82],
-            "F1 Score": [0.70, 0.72, 0.75, 0.78, 0.82, 0.84, 0.82, 0.83, 0.81]
+            "Accuracy": [0.863, 0.856, 0.863, 0.863, 0.863, 0.863, 0.607, 0.607, 0.607],
+            "F1 Score": [0.927, 0.919, 0.927, 0.927, 0.927, 0.927, 0.719, 0.719, 0.719]
         })
         st.dataframe(model_df, use_container_width=True)
     
@@ -498,11 +498,12 @@ elif sayfa == "Modelleme ve Tahmin":
                 "Decision Tree", "Random Forest", "XGBoost",
                 "LightGBM", "CatBoost", "ExtraTrees"
             ],
-            "Accuracy": [0.72, 0.74, 0.76, 0.80, 0.84, 0.85, 0.83, 0.84, 0.82],
-            "F1": [0.70, 0.72, 0.75, 0.78, 0.82, 0.84, 0.82, 0.83, 0.81],
-            "Precision": [0.68, 0.71, 0.74, 0.77, 0.81, 0.85, 0.81, 0.82, 0.80],
-            "Recall": [0.72, 0.74, 0.76, 0.79, 0.83, 0.83, 0.84, 0.85, 0.83]
+            "Accuracy": [0.863, 0.856, 0.863, 0.863, 0.863, 0.863, 0.607, 0.607, 0.607],
+            "F1": [0.927, 0.919, 0.927, 0.927, 0.927, 0.927, 0.719, 0.719, 0.719],
+            "Precision": [0.863, 0.891, 0.863, 0.863, 0.863, 0.863, 0.938, 0.938, 0.938],
+            "Recall": [1.000, 0.949, 1.000, 1.000, 1.000, 1.000, 0.584, 0.584, 0.584]
         })
+
         
         selected_model = st.selectbox("🧠 İncelemek için bir model seçin", model_detay_df["Model"])
         model_info = model_detay_df[model_detay_df["Model"] == selected_model].iloc[0]

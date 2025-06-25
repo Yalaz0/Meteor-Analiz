@@ -275,20 +275,79 @@ elif sayfa == "Harita Üzerinden İnceleme":
         )
     )
 
-    st.subheader("🛰️ 3D Görselleştirme")
-    st.markdown("""
-    Son olarak, meteor yoğunluklarını ve şehir yerleşimlerini 3 boyutlu olarak görebileceğiniz etkileşimli bir harita aşağıdadır.
-    """)
+    # st.subheader("🛰️ 3D Görselleştirme")
+    # st.markdown("""
+    # Son olarak, meteor yoğunluklarını ve şehir yerleşimlerini 3 boyutlu olarak görebileceğiniz etkileşimli bir harita aşağıdadır.
+    # """)
 
-    # Yeni: Kırmızı-turuncu renk geçişli meteor yoğunluğu
+    # # Yeni: Kırmızı-turuncu renk geçişli meteor yoğunluğu
+    # meteor_layer = pdk.Layer(
+    #     "HexagonLayer",
+    #     data=meteor_df.dropna(subset=["reclat", "reclong"]),
+    #     get_position='[reclong, reclat]',
+    #     radius=50000,
+    #     elevation_scale=80,
+    #     elevation_range=[0, 4000],
+    #     pickable=True,
+    #     extruded=True,
+    #     color_range=[
+    #         [255, 69, 0],
+    #         [255, 100, 0],
+    #         [255, 140, 0],
+    #         [255, 180, 60],
+    #         [255, 220, 100],
+    #     ]
+    # )
+
+    # city_layer = pdk.Layer(
+    #     "ColumnLayer",
+    #     data=city_gdf.dropna(subset=["lat", "lon"]),
+    #     get_position='[lon, lat]',
+    #     get_elevation=300000,
+    #     elevation_scale=1,
+    #     radius=15000,
+    #     get_fill_color='[0, 120, 255, 180]',
+    #     pickable=True,
+    #     auto_highlight=True,
+    # )
+
+    # view_state = pdk.ViewState(latitude=20, longitude=0, zoom=1.2, pitch=45)
+
+    # st.pydeck_chart(
+    #     pdk.Deck(
+    #         map_style="mapbox://styles/mapbox/dark-v10",
+    #         initial_view_state=view_state,
+    #         layers=[meteor_layer, city_layer],
+    #         tooltip={"text": "Konum Bilgisi"}
+    #     )
+    # )
+
+    # st.markdown("""
+    # - **Kırmızı tonlar**: Meteor düşüşlerinin yoğun olduğu bölgeleri temsil eder.
+    # - **Mavi sütunlar**: Dünya üzerindeki şehirlerin yerleşim noktalarını 3D binalar gibi gösterir.
+    # - **Yüksek alanlar**, daha fazla yoğunluğa veya nüfusa sahip bölgeleri simgeler.
+    # """)
+
+
+    st.markdown("""
+    ### 🌐 Etkileşimli 🛰️ 3D Harita Görselleştirmesi
+    
+    🔽 Aşağıdan 3D haritayı yüklemek için butonu kullanabilirsiniz. İlk yüklemede bekleme süresi olabilir.
+    """)
+    
+    # Daha yoğun örnekleme (eski estetik korunur)
+    meteor_sample = meteor_df.dropna(subset=["reclat", "reclong"]).sample(n=8000, random_state=42)
+    city_sample = city_gdf.dropna(subset=["lat", "lon"]).sample(n=2000, random_state=42)
+    
+    # 3D Meteor Hex Katmanı
     meteor_layer = pdk.Layer(
         "HexagonLayer",
-        data=meteor_df.dropna(subset=["reclat", "reclong"]),
+        data=meteor_sample,
         get_position='[reclong, reclat]',
         radius=50000,
-        elevation_scale=80,
-        elevation_range=[0, 4000],
-        pickable=True,
+        elevation_scale=70,
+        elevation_range=[0, 5000],
+        pickable=False,
         extruded=True,
         color_range=[
             [255, 69, 0],
@@ -296,37 +355,43 @@ elif sayfa == "Harita Üzerinden İnceleme":
             [255, 140, 0],
             [255, 180, 60],
             [255, 220, 100],
-        ]
+        ],
     )
-
+    
+    # 3D Şehir Katmanı
     city_layer = pdk.Layer(
         "ColumnLayer",
-        data=city_gdf.dropna(subset=["lat", "lon"]),
+        data=city_sample,
         get_position='[lon, lat]',
         get_elevation=300000,
         elevation_scale=1,
-        radius=15000,
-        get_fill_color='[0, 120, 255, 180]',
+        radius=14000,
+        get_fill_color='[0, 150, 255, 200]',
         pickable=True,
         auto_highlight=True,
     )
-
+    
+    # Kamera Ayarı
     view_state = pdk.ViewState(latitude=20, longitude=0, zoom=1.2, pitch=45)
-
-    st.pydeck_chart(
-        pdk.Deck(
-            map_style="mapbox://styles/mapbox/dark-v10",
-            initial_view_state=view_state,
-            layers=[meteor_layer, city_layer],
-            tooltip={"text": "Konum Bilgisi"}
-        )
-    )
-
+    
+    # Belirgin "Görüntüle" butonu ile haritayı aç
+    with st.expander("📌 Haritayı Görüntülemek İçin Tıklayın", expanded=False):
+        if st.button("📡 3D Haritayı Yükle", help="Tıklayarak meteor ve şehirlerin 3B görünümünü yükleyin."):
+            st.pydeck_chart(
+                pdk.Deck(
+                    map_style="mapbox://styles/mapbox/dark-v10",  # Eski uyumlu stil
+                    initial_view_state=view_state,
+                    layers=[meteor_layer, city_layer],
+                    tooltip={"text": "Konum Bilgisi"}
+                )
+            )
+    
     st.markdown("""
-    - **Kırmızı tonlar**: Meteor düşüşlerinin yoğun olduğu bölgeleri temsil eder.
-    - **Mavi sütunlar**: Dünya üzerindeki şehirlerin yerleşim noktalarını 3D binalar gibi gösterir.
-    - **Yüksek alanlar**, daha fazla yoğunluğa veya nüfusa sahip bölgeleri simgeler.
+    - **🔴 Kırmızı tonlar**: Meteor yoğunluklarını gösterir.
+    - **🔵 Mavi sütunlar**: Şehir yerleşimlerini temsil eder.
+    - **🏙️ Yüksek yapılar**: Nüfus/yoğunluk vurgusu sunar.
     """)
+
 
     st.subheader("🧩 İleri Analizler")
     st.info("Bu bölümde yoğunluk haritası, zaman serisi ve kümelenme analizleri entegre edilecektir.")

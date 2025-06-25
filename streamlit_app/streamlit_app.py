@@ -252,28 +252,56 @@ elif sayfa == "Harita Üzerinden İnceleme":
 
     
 
+    # st.subheader("🏙️ Şehir Yerleşim Noktaları (2D)")
+    # st.markdown("""
+    # Bu harita, şehirlerin dünya genelindeki konumlarını gösterir.
+    # Noktalar, 3D görseldeki gibi **mavi renk temasıyla** işaretlenmiştir.
+    # """)
+    # # Özel renkli noktalar için Pydeck Scatterplot kullan
+    # city_layer_2d = pdk.Layer(
+    #     "ScatterplotLayer",
+    #     data=city_gdf.dropna(subset=["lat", "lon"]),
+    #     get_position='[lon, lat]',
+    #     get_color='[0, 120, 255, 180]',
+    #     get_radius=50000,
+    #     pickable=False,
+    # )
+    # view_state_2d = pdk.ViewState(latitude=20, longitude=0, zoom=1.2, pitch=0)
+    # st.pydeck_chart(
+    #     pdk.Deck(
+    #         map_style="mapbox://styles/mapbox/light-v10",
+    #         initial_view_state=view_state_2d,
+    #         layers=[city_layer_2d],
+    #     )
+    # )
+
     st.subheader("🏙️ Şehir Yerleşim Noktaları (2D)")
     st.markdown("""
-    Bu harita, şehirlerin dünya genelindeki konumlarını gösterir.
+    Bu harita, şehirlerin dünya genelindeki konumlarını gösterir.  
     Noktalar, 3D görseldeki gibi **mavi renk temasıyla** işaretlenmiştir.
     """)
-    # Özel renkli noktalar için Pydeck Scatterplot kullan
+    
+    city_sample_2d = city_gdf.dropna(subset=["lat", "lon"]).sample(n=2000, random_state=42)
     city_layer_2d = pdk.Layer(
         "ScatterplotLayer",
-        data=city_gdf.dropna(subset=["lat", "lon"]),
+        data=city_sample_2d,
         get_position='[lon, lat]',
         get_color='[0, 120, 255, 180]',
         get_radius=50000,
         pickable=False,
     )
     view_state_2d = pdk.ViewState(latitude=20, longitude=0, zoom=1.2, pitch=0)
-    st.pydeck_chart(
-        pdk.Deck(
-            map_style="mapbox://styles/mapbox/light-v10",
-            initial_view_state=view_state_2d,
-            layers=[city_layer_2d],
-        )
-    )
+    
+    with st.expander("📍 2D Şehir Haritasını Göster"):
+        if st.button("🗺️ Haritayı Yükle"):
+            st.pydeck_chart(
+                pdk.Deck(
+                    map_style="carto-darkmatter",  # Alternatif daha hafif stil
+                    initial_view_state=view_state_2d,
+                    layers=[city_layer_2d],
+                )
+            )
+
 
     # st.subheader("🛰️ 3D Görselleştirme")
     # st.markdown("""

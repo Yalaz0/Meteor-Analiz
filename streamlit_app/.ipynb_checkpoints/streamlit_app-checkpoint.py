@@ -275,19 +275,74 @@ elif sayfa == "Harita Üzerinden İnceleme":
         )
     )
 
-    st.subheader("🛰️ 3D Görselleştirme")
+    # st.subheader("🛰️ 3D Görselleştirme") 
+    # st.markdown("""
+    # Son olarak, meteor yoğunluklarını ve şehir yerleşimlerini 3 boyutlu olarak görebileceğiniz etkileşimli bir harita aşağıdadır.
+    # """)
+
+    # # Yeni: Kırmızı-turuncu renk geçişli meteor yoğunluğu
+    # meteor_layer = pdk.Layer(
+    #     "HexagonLayer",
+    #     data=meteor_df.dropna(subset=["reclat", "reclong"]),
+    #     get_position='[reclong, reclat]',
+    #     radius=50000,
+    #     elevation_scale=80,
+    #     elevation_range=[0, 4000],
+    #     pickable=True,
+    #     extruded=True,
+    #     color_range=[
+    #         [255, 69, 0],
+    #         [255, 100, 0],
+    #         [255, 140, 0],
+    #         [255, 180, 60],
+    #         [255, 220, 100],
+    #     ]
+    # )
+
+    # city_layer = pdk.Layer(
+    #     "ColumnLayer",
+    #     data=city_gdf.dropna(subset=["lat", "lon"]),
+    #     get_position='[lon, lat]',
+    #     get_elevation=300000,
+    #     elevation_scale=1,
+    #     radius=15000,
+    #     get_fill_color='[0, 120, 255, 180]',
+    #     pickable=True,
+    #     auto_highlight=True,
+    # )
+
+    # view_state = pdk.ViewState(latitude=20, longitude=0, zoom=1.2, pitch=45)
+
+    # st.pydeck_chart(
+    #     pdk.Deck(
+    #         map_style="mapbox://styles/mapbox/dark-v10",
+    #         initial_view_state=view_state,
+    #         layers=[meteor_layer, city_layer],
+    #         tooltip={"text": "Konum Bilgisi"}
+    #     )
+    # )
+
+    # st.markdown("""
+    # - **Kırmızı tonlar**: Meteor düşüşlerinin yoğun olduğu bölgeleri temsil eder.
+    # - **Mavi sütunlar**: Dünya üzerindeki şehirlerin yerleşim noktalarını 3D binalar gibi gösterir.
+    # - **Yüksek alanlar**, daha fazla yoğunluğa veya nüfusa sahip bölgeleri simgeler.
+    # """)
+
+        st.subheader("🛰️ 3D Görselleştirme")
     st.markdown("""
     Son olarak, meteor yoğunluklarını ve şehir yerleşimlerini 3 boyutlu olarak görebileceğiniz etkileşimli bir harita aşağıdadır.
     """)
-
-    # Yeni: Kırmızı-turuncu renk geçişli meteor yoğunluğu
+    
+    # ➤ Daha hafif örnekleme (beyaz ekranı önlemek için)
+    sampled_meteor_df = meteor_df.dropna(subset=["reclat", "reclong"]).sample(n=5000, random_state=42)
+    
     meteor_layer = pdk.Layer(
         "HexagonLayer",
-        data=meteor_df.dropna(subset=["reclat", "reclong"]),
+        data=sampled_meteor_df,
         get_position='[reclong, reclat]',
-        radius=50000,
-        elevation_scale=80,
-        elevation_range=[0, 4000],
+        radius=40000,
+        elevation_scale=60,
+        elevation_range=[0, 3000],
         pickable=True,
         extruded=True,
         color_range=[
@@ -298,7 +353,7 @@ elif sayfa == "Harita Üzerinden İnceleme":
             [255, 220, 100],
         ]
     )
-
+    
     city_layer = pdk.Layer(
         "ColumnLayer",
         data=city_gdf.dropna(subset=["lat", "lon"]),
@@ -310,23 +365,20 @@ elif sayfa == "Harita Üzerinden İnceleme":
         pickable=True,
         auto_highlight=True,
     )
-
+    
     view_state = pdk.ViewState(latitude=20, longitude=0, zoom=1.2, pitch=45)
-
+    
+    # ➤ Daha güvenli stil: 'light'
     st.pydeck_chart(
         pdk.Deck(
-            map_style="mapbox://styles/mapbox/dark-v10",
+            map_style="light",
             initial_view_state=view_state,
             layers=[meteor_layer, city_layer],
             tooltip={"text": "Konum Bilgisi"}
         )
     )
+     st.info("❕ Harita yüklenmiyorsa sayfayı yenileyin veya internet bağlantınızı kontrol edin.")
 
-    st.markdown("""
-    - **Kırmızı tonlar**: Meteor düşüşlerinin yoğun olduğu bölgeleri temsil eder.
-    - **Mavi sütunlar**: Dünya üzerindeki şehirlerin yerleşim noktalarını 3D binalar gibi gösterir.
-    - **Yüksek alanlar**, daha fazla yoğunluğa veya nüfusa sahip bölgeleri simgeler.
-    """)
 
     st.subheader("🧩 İleri Analizler")
     st.info("Bu bölümde yoğunluk haritası, zaman serisi ve kümelenme analizleri entegre edilecektir.")
